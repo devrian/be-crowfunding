@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"bwastartup/helper"
-	"bwastartup/user"
+	"be-crowfunding/helper"
+	"be-crowfunding/user"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

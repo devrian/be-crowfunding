@@ -1,4 +1,4 @@
-module bwastartup
+module be-crowfunding
 
 go 1.15
 

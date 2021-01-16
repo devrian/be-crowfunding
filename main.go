@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bwastartup/handler"
-	"bwastartup/user"
+	"be-crowfunding/handler"
+	"be-crowfunding/user"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	dbSpecification := "devrian:@tcp(127.0.0.1:3306)/bwastartup?charset=utf8mb4&parseTime=True&loc=Local"
+	dbSpecification := "devrian:@tcp(127.0.0.1:3306)/crowfunding?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dbSpecification), &gorm.Config{})
 
 	if err != nil {
