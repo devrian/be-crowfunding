@@ -1,6 +1,11 @@
 package helper
 
-import "github.com/go-playground/validator/v10"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+)
 
 // Response is ...
 type Response struct {
@@ -31,6 +36,7 @@ func APIResponse(message string, code int, status string, data interface{}) Resp
 	return result
 }
 
+// FormatValidationError is ...
 func FormatValidationError(err error) []string {
 	var errors []string
 
@@ -39,4 +45,21 @@ func FormatValidationError(err error) []string {
 	}
 
 	return errors
+}
+
+// APIResponseErrorEntityProcess is ...
+func APIResponseErrorEntityProcess(err string, messageError string) Response {
+	errorMessage := gin.H{"errors": err}
+	response := APIResponse(messageError, http.StatusUnprocessableEntity, "error", errorMessage)
+
+	return response
+}
+
+// APIResponseErrorEntityValidation is ...
+func APIResponseErrorEntityValidation(err error, messageError string) Response {
+	errors := FormatValidationError(err)
+	errorMessage := gin.H{"errors": errors}
+	response := APIResponse(messageError, http.StatusUnprocessableEntity, "error", errorMessage)
+
+	return response
 }
