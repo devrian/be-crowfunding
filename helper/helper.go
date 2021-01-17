@@ -47,16 +47,16 @@ func FormatValidationError(err error) []string {
 	return errors
 }
 
-// APIResponseErrorEntityProcess is ...
-func APIResponseErrorEntityProcess(err string, messageError string) Response {
+// APIResponseErrorByErrorString is ...
+func APIResponseErrorByErrorString(err string, messageError string) Response {
 	errorMessage := gin.H{"errors": err}
 	response := APIResponse(messageError, http.StatusUnprocessableEntity, "error", errorMessage)
 
 	return response
 }
 
-// APIResponseErrorEntityValidation is ...
-func APIResponseErrorEntityValidation(err error, messageError string) Response {
+// APIResponseErrorByError is ...
+func APIResponseErrorByError(err error, messageError string) Response {
 	errors := FormatValidationError(err)
 	errorMessage := gin.H{"errors": errors}
 	response := APIResponse(messageError, http.StatusUnprocessableEntity, "error", errorMessage)
