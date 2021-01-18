@@ -2,6 +2,7 @@ package helper
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -47,19 +48,21 @@ func FormatValidationError(err error) []string {
 	return errors
 }
 
-// APIResponseErrorByErrorString is ...
-func APIResponseErrorByErrorString(err string, messageError string) Response {
-	errorMessage := gin.H{"errors": err}
-	response := APIResponse(messageError, http.StatusUnprocessableEntity, "error", errorMessage)
-
-	return response
-}
-
-// APIResponseErrorByError is ...
-func APIResponseErrorByError(err error, messageError string) Response {
+// APIResponseErrorByValidationError is ...
+func APIResponseErrorByValidationError(err error, messageError string) Response {
 	errors := FormatValidationError(err)
 	errorMessage := gin.H{"errors": errors}
 	response := APIResponse(messageError, http.StatusUnprocessableEntity, "error", errorMessage)
 
 	return response
+}
+
+// EnsureDir is ...
+func EnsureDir(dirName string, mode os.FileMode) error {
+	err := os.Mkdir(dirName, mode)
+	if err == nil || os.IsExist(err) {
+		return nil
+	}
+
+	return err
 }
