@@ -1,6 +1,7 @@
 package main
 
 import (
+	"be-crowfunding/auth"
 	"be-crowfunding/handler"
 	"be-crowfunding/user"
 	"log"
@@ -20,7 +21,8 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
-	userHandler := handler.NewUserHandler(userService)
+	authService := auth.NewService()
+	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
 
