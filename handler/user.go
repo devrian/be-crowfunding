@@ -128,7 +128,8 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	userID := 18
+	currentUser := c.MustGet("currentUser").(user.User)
+	userID := currentUser.ID
 
 	if err := helper.EnsureDir(directory, os.ModePerm); err != nil {
 		data := gin.H{"errors": err.Error()}
