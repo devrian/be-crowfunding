@@ -129,7 +129,7 @@ func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
 }
 
 func (h *userHandler) UploadAvatar(c *gin.Context) {
-	directory := "images"
+	directory := "images/avatars"
 
 	file, err := c.FormFile("avatar")
 
@@ -140,15 +140,15 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	currentUser := c.MustGet("currentUser").(user.User)
-	userID := currentUser.ID
-
 	if err := helper.EnsureDir(directory, os.ModePerm); err != nil {
 		data := gin.H{"errors": err.Error()}
 		response := helper.APIResponse("Directory creation failed with error", http.StatusBadRequest, "error", data)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	userID := currentUser.ID
 
 	path := fmt.Sprintf(directory+"/%d-%s", userID, file.Filename)
 

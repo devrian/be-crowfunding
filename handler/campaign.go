@@ -4,7 +4,9 @@ import (
 	"be-crowfunding/campaign"
 	"be-crowfunding/helper"
 	"be-crowfunding/user"
+	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -116,6 +118,61 @@ func (h *campaignHandler) UpdateCampaign(c *gin.Context) {
 	campaignFormatter := campaign.FormatCampaign(updatedCampaign)
 
 	response := helper.APIResponse("Success to update campaign", http.StatusOK, "success", campaignFormatter)
+
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *campaignHandler) UploadImage(c *gin.Context) {
+	directory := "images/campaigns"
+	var input campaign.CreateCampaignImageInput
+
+	err := c.ShouldBind(&input)
+	if err != nil {
+		response := helper.APIResponseErrorByValidationError(err, "Failed to upload campaign image")
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload campaign image", http.StatusBadRequest, "error", data)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	if err := helper.EnsureDir(directory, os.ModePerm); err != nil {
+		data := gin.H{"errors": err.Error()}
+		response := helper.APIResponse("Directory creation failed with error", http.StatusBadRequest, "error", data)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	userID := currentUser.ID
+	input.User = currentUser
+
+	path := fmt.Sprintf(directory+"/%d-%s", userID, file.Filename)
+
+	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload campaign image", http.StatusBadRequest, "error", data)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	_, err = h.service.SaveCampaignImage(input, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload campaign image", http.StatusBadRequest, "error", data)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	data := gin.H{"is_uploaded": true}
+
+	response := helper.APIResponse("Campaign image successfuly uploaded", http.StatusOK, "success", data)
 
 	c.JSON(http.StatusOK, response)
 }
