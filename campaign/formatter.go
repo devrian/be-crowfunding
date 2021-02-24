@@ -66,9 +66,11 @@ func FormatCampaign(campaign Campaign) CampaignFormatter {
 func FormatCampaigns(campaigns []Campaign) []CampaignFormatter {
 	campaignsFormatter := []CampaignFormatter{}
 
-	for _, campaign := range campaigns {
-		campaignFormatter := FormatCampaign(campaign)
-		campaignsFormatter = append(campaignsFormatter, campaignFormatter)
+	if len(campaigns) > 0 {
+		for _, campaign := range campaigns {
+			campaignFormatter := FormatCampaign(campaign)
+			campaignsFormatter = append(campaignsFormatter, campaignFormatter)
+		}
 	}
 
 	return campaignsFormatter
