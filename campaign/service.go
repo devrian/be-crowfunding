@@ -116,6 +116,14 @@ func (s *service) SaveCampaignImage(input CreateCampaignImageInput, fileLocation
 		FileName:   fileLocation,
 	}
 
+	campaignImages, err := s.repository.FindCampaignImagesByCampaignID(input.CampaignID)
+	if err != nil {
+		return CampaignImage{}, err
+	}
+	if len(campaignImages) == 0 {
+		campaignImage.IsPrimary = 1
+	}
+
 	if input.IsPrimary {
 		campaignImage.IsPrimary = 1
 

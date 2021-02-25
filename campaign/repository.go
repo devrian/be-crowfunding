@@ -13,6 +13,7 @@ type Repository interface {
 	Update(campaign Campaign) (Campaign, error)
 	CreateImage(campaignImage CampaignImage) (CampaignImage, error)
 	MarkAllImagesAsNonPrimary(campaignID int) (bool, error)
+	FindCampaignImagesByCampaignID(campaignID int) ([]CampaignImage, error)
 }
 
 type repository struct {
@@ -91,4 +92,15 @@ func (r *repository) MarkAllImagesAsNonPrimary(campaignID int) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func (r *repository) FindCampaignImagesByCampaignID(campaignID int) ([]CampaignImage, error) {
+	var campaignImages []CampaignImage
+
+	err := r.db.Where("campaign_id", campaignID).Find(&campaignImages).Error
+	if err != nil {
+		return campaignImages, err
+	}
+
+	return campaignImages, nil
 }
