@@ -47,18 +47,19 @@ CREATE TABLE `crowfunding`.`campaign_images` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 
 -- Fourth
-CREATE TABLE `crowfunding`.`transactions` (
+CREATE TABLE `transactions` (
     `id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `campaign_id` bigint unsigned DEFAULT NULL,
     `user_id` bigint unsigned DEFAULT NULL,
-    `amount` bigint unsigned DEFAULT NULL,
+    `amount` decimal(15,2) DEFAULT NULL,
     `status` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `code` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-    `created_at` datetime NOT NULL,
-    `updated_at` datetime NOT NULL,
+    `payment_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `created_at` timestamp NOT NULL,
+    `updated_at` timestamp NOT NULL,
     PRIMARY KEY (`id`),
     KEY `transactions_campaign_id` (`campaign_id`),
     KEY `transactions_user_id` (`user_id`),
     CONSTRAINT `transactions_campaign_id` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`id`) ON DELETE CASCADE,
     CONSTRAINT `transactions_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
